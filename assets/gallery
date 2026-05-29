@@ -1,0 +1,37 @@
+import streamlit as st
+import os
+
+# --- STEP 1: Define the function (Top of the file) ---
+IMAGE_DIR = "generated_images" # Unna folder name check panniko macha
+
+def show_gallery():
+    st.title("🎨 AI Generation Gallery")
+    if os.path.exists(IMAGE_DIR):
+        files = [f for f in os.listdir(IMAGE_DIR) if f.endswith(('.png', '.jpg', '.jpeg'))]
+        if files:
+            cols = st.columns(3)
+            for idx, img_file in enumerate(files):
+                with cols[idx % 3]:
+                    st.image(os.path.join(IMAGE_DIR, img_file), use_container_width=True)
+        else:
+            st.info("No images in the gallery yet.")
+    else:
+        st.error(f"Folder '{IMAGE_DIR}' not found!")
+
+# --- STEP 2: Main Logic / Navigation ---
+# Unnoda sidebar menu code ithu
+menu = ["Home", "Generator", "Gallery", "About"]
+choice = st.sidebar.selectbox("Navigation", menu)
+
+if choice == "Home":
+    st.write("Welcome to the AI Studio") # Inga thaan unga screenshot-la irukura landing page irukanum
+
+elif choice == "Generator":
+    st.write("Image Generation Logic Inga irukanum")
+
+elif choice == "Gallery":
+    # --- STEP 3: Add the call here! ---
+    show_gallery()
+
+elif choice == "About":
+    st.write("About section")

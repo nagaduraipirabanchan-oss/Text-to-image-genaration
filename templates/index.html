@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEXT TO IMAGE GENERATION USING PYTHON WEB APPLICATION</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+</head>
+<body class="bg-[#050816] text-white font-sans selection:bg-cyan-500 selection:text-black">
+
+    <div id="login-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#02040a] overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/20 rounded-full blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(6, 182, 212, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.2) 1px, transparent 1px); background-size: 50px 50px; transform: perspective(500px) rotateX(60deg) translateY(-100px); animation: gridMove 10s linear infinite;"></div>
+    </div>
+
+    <div class="glass p-10 rounded-[3rem] border border-cyan-500/30 w-full max-w-md relative z-10 text-center shadow-[0_0_50px_rgba(6,182,212,0.15)] transform transition-all duration-700 hover:scale-[1.02]">
+        <div class="w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-[0_0_30px_rgba(6,182,212,0.5)] rotate-12 hover:rotate-0 transition-transform duration-500">
+            <i class="fas fa-shield-alt text-3xl text-black"></i>
+        </div>
+        
+        <h2 class="text-3xl font-black text-white mb-2 tracking-tight">SYSTEM ACCESS</h2>
+        <p class="text-cyan-400/60 text-[10px] tracking-[0.4em] uppercase mb-10 font-bold">Imaginix Neural Interface</p>
+        
+        <div class="space-y-6">
+            <div class="relative group text-left">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/50 group-focus-within:text-cyan-400"><i class="fas fa-id-badge"></i></span>
+                <input type="text" id="username" class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-cyan-500 transition-all placeholder:text-gray-600" placeholder="Operator ID">
+            </div>
+            
+            <div class="relative group text-left">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/50 group-focus-within:text-cyan-400"><i class="fas fa-key"></i></span>
+                <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-cyan-500 transition-all placeholder:text-gray-600" placeholder="Access Code">
+            </div>
+
+            <button onclick="checkLogin()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-black py-4 rounded-2xl tracking-widest transition-all shadow-[0_10px_20px_rgba(6,182,212,0.3)] active:scale-95">
+                INITIALIZE SESSION
+            </button>
+        </div>
+        
+        <p id="login-error" class="text-red-400 text-xs mt-6 font-bold hidden uppercase tracking-widest animate-pulse">Access Denied: Check Credentials</p>
+    </div>
+</div>
+
+    <div id="main-app" class="hidden">
+        <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+            <div class="absolute w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] top-[-10%] left-[-10%]"></div>
+            <div class="absolute w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[150px] bottom-[-20%] right-[-10%]"></div>
+        </div>
+
+        <nav class="fixed w-full z-50 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-black tracking-widest text-cyan-400 flex items-center gap-2 glow-text">
+                <i class="fas fa-brain animate-pulse"></i>TEXT TO IMAGE GENERATION 
+            </div>
+            <div class="flex space-x-2 md:space-x-4">
+                <button onclick="showTab('home')" class="nav-link px-4 py-2 rounded-xl text-cyan-400 bg-white/5 border border-white/10 transition" id="nav-home">Home</button>
+                <button onclick="showTab('gen')" class="nav-link px-4 py-2 rounded-xl text-gray-400 hover:text-white transition" id="nav-gen">Generator</button>
+                <button onclick="showTab('gallery')" class="nav-link px-4 py-2 rounded-xl text-gray-400 hover:text-white transition" id="nav-gallery">Gallery</button>
+                <button onclick="showTab('about')" class="nav-link px-4 py-2 rounded-xl text-gray-400 hover:text-white transition" id="nav-about">About</button>
+            </div>
+        </nav>
+
+        <section id="home" class="tab-content pt-32 pb-20 px-6 block active relative z-10">
+            <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+                <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                    Transforming Words into Vivid Reality <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 drop-shadow-lg">With Python AI</span>
+                </h1>
+                <p class="text-gray-400 max-w-2xl text-lg mb-10">A cutting-edge platform utilizing state-of-the-art Generative Adversarial Networks (GANs) and Diffusion models.</p>
+                
+                <button onclick="showTab('gen')" class="bg-cyan-600 hover:bg-cyan-500 text-black font-bold px-8 py-4 rounded-xl shadow-lg hover:scale-105 transition duration-300 neon-hover">
+                    START TO GENERATE <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-20 w-full">
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-center neon-hover">
+                        <h3 id="image-counter">{{ live_count }}+</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">Images Generated</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-center">
+                        <h3 class="text-3xl font-black text-white">320+</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">Active Users</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-center">
+                        <h3 class="text-3xl font-black text-white">4</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">AI Models</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-center">
+                        <h3 class="text-3xl font-black text-white">94%</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">Accuracy</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-center">
+                        <h3 class="text-3xl font-black text-white">3.2s</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">Avg Time</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gen" class="tab-content pt-32 pb-20 px-6 hidden relative z-10">
+            <div class="max-w-6xl mx-auto glass p-8 rounded-[2.5rem] border border-white/10 grid md:grid-cols-2 gap-10">
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-bold flex items-center gap-2">AI Art Studio <span class="text-xs text-cyan-400 border border-cyan-400/30 px-2 py-0.5 rounded">v2.0</span></h2>
+                    <textarea id="prompt" class="w-full bg-black/40 border border-white/10 rounded-2xl p-5 h-40 focus:border-cyan-500 outline-none transition" placeholder="Describe what you want to see..."></textarea>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Art Style</label>
+                            <select id="style" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 outline-none focus:border-cyan-500">
+                                <option value="realistic">Realistic</option>
+                                <option value="cyberpunk">Cyberpunk</option>
+                                <option value="anime">Anime</option>
+                                <option value="oil_painting">Oil Painting</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Resolution</label>
+                            <select id="resolution" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 outline-none focus:border-cyan-500">
+                                <option value="512x512">Standard (512x512)</option>
+                                <option value="1024x1024">HD (1024x1024)</option>
+                                <option value="3840x2160">4K Ultra HD</option>
+                                <option value="7680x4320">8K Super HD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="generate()" id="gen-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-black font-black py-4 rounded-xl tracking-widest transition flex justify-center items-center gap-2 neon-hover">
+                        <i class="fas fa-cog" id="btn-icon"></i> GENERATE ART
+                    </button>
+                    <div class="pt-4 space-y-2">
+                        <p class="text-xs text-gray-500 font-bold uppercase">Try Examples:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="fillPrompt('Cyberpunk city at night', 'cyberpunk')" class="text-[10px] bg-white/5 border border-white/10 px-3 py-1.5 rounded-full hover:text-cyan-400 transition">Cyberpunk city</button>
+                            <button onclick="fillPrompt('Astronaut riding horse', 'realistic')" class="text-[10px] bg-white/5 border border-white/10 px-3 py-1.5 rounded-full hover:text-cyan-400 transition">Astronaut riding horse</button>
+                            <button onclick="fillPrompt('Deep oil painting of a tiger', 'oil_painting')" class="text-[10px] bg-white/5 border border-white/10 px-3 py-1.5 rounded-full hover:text-cyan-400 transition">Tiger Oil Painting</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative border-2 border-dashed border-white/10 rounded-[2rem] flex flex-col items-center justify-center min-h-[400px] overflow-hidden bg-black/20" id="preview-box">
+                    <div id="loader" class="hidden flex flex-col items-center gap-4">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-cyan-400"></div>
+                        <p class="text-sm text-cyan-400 animate-pulse">Generating Masterpiece...</p>
+                    </div>
+                    <p id="placeholder" class="text-gray-600 text-center px-10">Artwork will appear here</p>
+                    <img id="res-img" class="hidden w-full h-full object-cover">
+                    <div id="download-overlay" class="hidden absolute bottom-4 right-4 flex gap-2">
+                        <a id="download-link" href="#" download="ai_art.jpg" class="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl hover:bg-white/20 transition text-xs flex items-center gap-2">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="tab-content pt-32 pb-20 px-6 hidden relative z-10 text-center">
+            <h2 class="text-4xl font-black mb-10 glow-text">Community Gallery</h2>
+            <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto"></div>
+        </section>
+
+        <section id="about" class="tab-content pt-32 pb-20 px-6 hidden relative z-10">
+    <div class="max-w-5xl mx-auto glass p-10 rounded-[3rem] border border-white/10 space-y-8">
+        <div class="text-center space-y-2">
+            <h2 class="text-4xl font-black text-cyan-400 glow-text">About the Project</h2>
+            <p class="text-gray-500 text-xs tracking-[0.3em] uppercase">Text-to-Image Generation Platform</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-10 items-center">
+            <div class="text-gray-300 space-y-4 text-base leading-relaxed text-justify">
+                <p>
+                    <span class="text-cyan-400 font-bold">text to image generate</span> is a state-of-the-art AI application designed to bridge the gap between creative imagination and digital visualization. Built on a robust <span class="text-white font-semibold">Python Flask</span> backend, the system leverages high-performance <span class="text-white font-semibold">Diffusion Models</span> and <span class="text-white font-semibold">Generative Adversarial Networks (GANs)</span> to interpret complex textual prompts and transform them into high-fidelity artistic assets.
+                </p>
+                <p>
+                    The platform features a futuristic <span class="text-cyan-400">Glassmorphic UI</span>, allowing users to customize their creations across multiple artistic styles—from Cyberpunk to Classic Oil Paintings—at resolutions up to <span class="text-white font-semibold">8K Ultra HD</span>.
+                </p>
+            </div>
+
+            <div class="bg-white/5 rounded-3xl border border-white/10 p-6 space-y-4">
+                <h4 class="text-sm font-black text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fas fa-rocket"></i> Future Enhancements
+                </h4>
+                <ul class="space-y-3">
+                    <li class="flex gap-3 text-xs text-gray-400">
+                        <i class="fas fa-video text-cyan-500 mt-1"></i>
+                        <span><b class="text-gray-200">AI Video Gen:</b> Extending logic to create 5-10s dynamic AI video clips from text.</span>
+                    </li>
+                    <li class="flex gap-3 text-xs text-gray-400">
+                        <i class="fas fa-microphone text-cyan-500 mt-1"></i>
+                        <span><b class="text-gray-200">Voice-to-Image:</b> Integration of Speech-to-Text for hands-free art generation.</span>
+                    </li>
+                    <li class="flex gap-3 text-xs text-gray-400">
+                        <i class="fas fa-paint-brush text-cyan-500 mt-1"></i>
+                        <span><b class="text-gray-200">Real-time In-painting:</b> Advanced masking to modify specific parts of generated art.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pt-6 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center p-3 bg-white/5 rounded-xl border border-white/5">
+                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Backend</p>
+                <p class="text-xs text-white">Python / Flask</p>
+            </div>
+            <div class="text-center p-3 bg-white/5 rounded-xl border border-white/5">
+                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">AI Logic</p>
+                <p class="text-xs text-white">Stable Diffusion / GANs</p>
+            </div>
+            <div class="text-center p-3 bg-white/5 rounded-xl border border-white/5">
+                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Frontend</p>
+                <p class="text-xs text-white">Tailwind / JS / Glass UI</p>
+            </div>
+            <div class="text-center p-3 bg-white/5 rounded-xl border border-white/5">
+                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Processing</p>
+                <p class="text-xs text-white">TensorFlow Backend</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <footer class="py-10 text-center border-t border-white/10 mt-20 relative z-10">
+            <p class="text-gray-500 text-xs tracking-widest uppercase mb-2">Powered by Python & TensorFlow</p>
+            <p class="text-sm font-bold text-cyan-400">Developed By PIRABANCHAN N</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
